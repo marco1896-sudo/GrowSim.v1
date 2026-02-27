@@ -1,0 +1,277 @@
+[
+  {
+    "eventId": "unterwaesserung",
+    "title": "Unterwässerung",
+    "text": "Die oberen Zentimeter des Substrats sind staubtrocken, Blätter wirken schlapp.",
+    "condition": {"all":[{"field":"water","op":"<","value":35}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Durchdringend gießen", "effects":{"water":22,"stress":-6,"health":4}, "delayed":[{"inMin":120,"effects":{"health":3}}]},
+      {"id":"b","label":"Nur leicht anfeuchten", "effects":{"water":10,"stress":-2}, "delayed":[{"inMin":120,"effects":{"water":-8,"stress":3}}]},
+      {"id":"c","label":"Abwarten", "effects":{"water":-6,"stress":6,"health":-5}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "ueberwaesserung",
+    "title": "Überwässerung",
+    "text": "Topf wirkt schwer und dauerhaft nass. Sauerstoffmangel in der Wurzelzone droht.",
+    "condition": {"all":[{"field":"water","op":">","value":78}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Drainage verbessern + Pause", "effects":{"water":-16,"stress":-2,"health":3}, "delayed":[{"inMin":180,"effects":{"health":4}}]},
+      {"id":"b","label":"Nur Ventilation erhöhen", "effects":{"water":-8,"stress":1}, "delayed":[{"inMin":120,"effects":{"health":-2}}]},
+      {"id":"c","label":"Weiter wie bisher", "effects":{"stress":7,"health":-7,"risk":8}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "ph_drift",
+    "title": "pH-Drift vermutet",
+    "text": "Mehrere Symptome passen nicht sauber zusammen. pH-Drift könnte die Ursache sein.",
+    "condition": {"all":[],"any":[{"field":"risk","op":">","value":55},{"field":"nutrition","op":"<","value":38}]},
+    "choices": [
+      {"id":"a","label":"Messung + Korrektur", "effects":{"health":5,"risk":-7}, "delayed":[{"inMin":180,"effects":{"nutrition":4}}]},
+      {"id":"b","label":"Leicht nachjustieren", "effects":{"risk":-2,"stress":-1}, "delayed":[{"inMin":180,"effects":{"health":1}}]},
+      {"id":"c","label":"Ignorieren", "effects":{"health":-5,"risk":7,"stress":4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "leichte_ueberduengung",
+    "title": "Leichte Überdüngung",
+    "text": "Spitzen verfärben sich leicht, EC war zuletzt am oberen Ende.",
+    "condition": {"all":[{"field":"nutrition","op":">","value":75}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Leicht spülen", "effects":{"nutrition":-12,"health":3}, "delayed":[{"inMin":120,"effects":{"water":-6}}]},
+      {"id":"b","label":"Dosis halbieren", "effects":{"nutrition":-8,"risk":-2}, "delayed":[{"inMin":120,"effects":{"health":2}}]},
+      {"id":"c","label":"Düngeschema halten", "effects":{"health":-4,"stress":3,"risk":4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "n_mangel_veg",
+    "title": "Stickstoffmangel (Vegetation)",
+    "text": "Neuer Austrieb bleibt hellgrün, Wachstum wirkt gebremst.",
+    "condition": {"all":[{"field":"growth","op":"<","value":45},{"field":"nutrition","op":"<","value":40}],"any":[]},
+    "choices": [
+      {"id":"a","label":"N leicht erhöhen", "effects":{"nutrition":12,"growth":5,"health":2}, "delayed":[{"inMin":180,"effects":{"growth":4}}]},
+      {"id":"b","label":"Nur beobachten", "effects":{"stress":2}, "delayed":[{"inMin":180,"effects":{"health":-3,"growth":-2}}]},
+      {"id":"c","label":"Stark nachdüngen", "effects":{"nutrition":20,"risk":6}, "delayed":[{"inMin":180,"effects":{"health":-4}}]}
+    ]
+  },
+  {
+    "eventId": "k_bedarf_bluete",
+    "title": "Kaliumbedarf steigt (Blütebeginn)",
+    "text": "Mit dem Übergang zur Blüte steigt der Kaliumbedarf spürbar.",
+    "condition": {"all":[{"field":"growth","op":">","value":60}],"any":[]},
+    "choices": [
+      {"id":"a","label":"K-fokussiert anpassen", "effects":{"nutrition":8,"health":3}, "delayed":[{"inMin":180,"effects":{"growth":3}}]},
+      {"id":"b","label":"Schema unverändert", "effects":{"stress":2}, "delayed":[{"inMin":180,"effects":{"health":-2}}]},
+      {"id":"c","label":"Zu stark erhöhen", "effects":{"nutrition":14,"risk":5}, "delayed":[{"inMin":180,"effects":{"health":-4}}]}
+    ]
+  },
+  {
+    "eventId": "hitzeperiode",
+    "title": "Hitzeperiode",
+    "text": "Mehrere Stunden über Idealtemperatur. Verdunstung steigt deutlich.",
+    "condition": {"all":[],"any":[{"field":"stress","op":">","value":50},{"field":"water","op":"<","value":45}]},
+    "choices": [
+      {"id":"a","label":"Klima aktiv kühlen", "effects":{"stress":-8,"water":-4,"health":2}, "delayed":[]},
+      {"id":"b","label":"Nur öfter gießen", "effects":{"water":10,"stress":-2}, "delayed":[{"inMin":120,"effects":{"risk":2}}]},
+      {"id":"c","label":"Aussitzen", "effects":{"water":-10,"stress":8,"health":-5}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "hohe_luftfeuchte",
+    "title": "Sehr hohe Luftfeuchtigkeit",
+    "text": "Die Luft steht, Feuchte bleibt ungewöhnlich hoch.",
+    "condition": {"all":[{"field":"risk","op":">","value":45}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Entfeuchten + Luftbewegung", "effects":{"risk":-8,"stress":-2}, "delayed":[{"inMin":120,"effects":{"health":2}}]},
+      {"id":"b","label":"Nur Beobachten", "effects":{"risk":2}, "delayed":[]},
+      {"id":"c","label":"Mehr besprühen", "effects":{"risk":8,"health":-4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "frueher_schaedlingsbefall",
+    "title": "Früher Schädlingsbefall",
+    "text": "Kleine Fraßspuren entdeckt. Befall ist noch lokal.",
+    "condition": {"all":[{"field":"risk","op":">","value":40}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Früh behandeln", "effects":{"risk":-10,"health":1}, "delayed":[{"inMin":180,"effects":{"health":3}}]},
+      {"id":"b","label":"Mechanisch entfernen", "effects":{"risk":-5,"stress":2}, "delayed":[]},
+      {"id":"c","label":"Abwarten", "effects":{"risk":10,"health":-6}, "delayed":[{"inMin":120,"effects":{"stress":4}}]}
+    ]
+  },
+  {
+    "eventId": "salzaufbau",
+    "title": "Salzaufbau im Substrat",
+    "text": "Drain EC liegt wiederholt über Input. Salzaufbau wahrscheinlich.",
+    "condition": {"all":[],"any":[{"field":"flags.saltBuildUp","op":"==","value":true},{"field":"nutrition","op":">","value":72}]},
+    "choices": [
+      {"id":"a","label":"Spülen + Reset", "effects":{"nutrition":-14,"health":3,"flags.saltBuildUp":false}, "delayed":[{"inMin":180,"effects":{"health":2}}]},
+      {"id":"b","label":"Nur leicht verdünnen", "effects":{"nutrition":-6,"flags.saltBuildUp":true}, "delayed":[{"inMin":180,"effects":{"risk":3}}]},
+      {"id":"c","label":"Ignorieren", "effects":{"health":-5,"risk":8,"flags.saltBuildUp":true}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "umtopfen",
+    "title": "Umtopfen steht an",
+    "text": "Wurzeln stoßen an Topfrand, Wasserhaltevermögen sinkt.",
+    "condition": {"all":[{"field":"growth","op":">","value":42}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Jetzt umtopfen", "effects":{"stress":4,"health":1}, "delayed":[{"inMin":240,"effects":{"growth":6,"water":6}}]},
+      {"id":"b","label":"Noch 1 Woche warten", "effects":{"stress":2}, "delayed":[{"inMin":240,"effects":{"water":-6,"health":-3}}]},
+      {"id":"c","label":"Nicht umtopfen", "effects":{"growth":-4,"health":-4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "lichtzyklus_geaendert",
+    "title": "Lichtzyklus geändert",
+    "text": "Der Zyklus wurde angepasst. Die Pflanze muss sich neu synchronisieren.",
+    "condition": {"all":[],"any":[{"field":"growth","op":">","value":35},{"field":"stress","op":">","value":35}]},
+    "choices": [
+      {"id":"a","label":"Sanfter Übergang", "effects":{"stress":-3,"health":2}, "delayed":[{"inMin":180,"effects":{"growth":3}}]},
+      {"id":"b","label":"Direkt umstellen", "effects":{"stress":4}, "delayed":[{"inMin":180,"effects":{"health":-2}}]},
+      {"id":"c","label":"Zurückwechseln", "effects":{"growth":-2,"stress":1}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "blaetter_rollen",
+    "title": "Blätter rollen sich ein",
+    "text": "Blattränder rollen auf. Meist ein Hinweis auf Klima- oder Wurzelstress.",
+    "condition": {"all":[{"field":"stress","op":">","value":52}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Klima + Wurzelcheck", "effects":{"stress":-8,"health":3}, "delayed":[]},
+      {"id":"b","label":"Nur mehr gießen", "effects":{"water":8,"stress":-1}, "delayed":[{"inMin":120,"effects":{"risk":2}}]},
+      {"id":"c","label":"Ignorieren", "effects":{"stress":7,"health":-4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "mg_mangel",
+    "title": "Magnesium-Mangel",
+    "text": "Interkostale Aufhellungen deuten auf Mg-Mangel hin.",
+    "condition": {"all":[{"field":"nutrition","op":"<","value":45}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Mg ergänzen", "effects":{"nutrition":8,"health":3}, "delayed":[{"inMin":180,"effects":{"health":3}}]},
+      {"id":"b","label":"Nur pH prüfen", "effects":{"risk":-2}, "delayed":[{"inMin":180,"effects":{"health":1}}]},
+      {"id":"c","label":"Nicht reagieren", "effects":{"health":-5,"growth":-3}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "zugluft",
+    "title": "Zugluft / starker Ventilator",
+    "text": "Dauerhafte direkte Luftströmung belastet Triebe.",
+    "condition": {"all":[],"any":[{"field":"stress","op":">","value":40},{"field":"health","op":"<","value":60}]},
+    "choices": [
+      {"id":"a","label":"Luftstrom umlenken", "effects":{"stress":-6,"health":2}, "delayed":[]},
+      {"id":"b","label":"Leistung reduzieren", "effects":{"stress":-3}, "delayed":[]},
+      {"id":"c","label":"So lassen", "effects":{"stress":5,"health":-3}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "regenperiode",
+    "title": "Regenperiode (Outdoor)",
+    "text": "Mehrere Tage Dauerregen verändern Wasser- und Sauerstoffhaushalt.",
+    "condition": {"all":[{"field":"water","op":">","value":65}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Regenschutz aufbauen", "effects":{"water":-8,"risk":-4}, "delayed":[]},
+      {"id":"b","label":"Nur Drain verbessern", "effects":{"water":-4,"stress":1}, "delayed":[]},
+      {"id":"c","label":"Keine Maßnahme", "effects":{"risk":8,"health":-4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "wurzelzone_kalt",
+    "title": "Wurzelzone zu kalt",
+    "text": "Kalte Nächte drücken die Wurzelaktivität.",
+    "condition": {"all":[{"field":"growth","op":"<","value":55}],"any":[{"field":"health","op":"<","value":65}]},
+    "choices": [
+      {"id":"a","label":"Topf isolieren", "effects":{"stress":-4,"health":3}, "delayed":[{"inMin":180,"effects":{"growth":3}}]},
+      {"id":"b","label":"Nur Gießzeiten ändern", "effects":{"stress":-1}, "delayed":[]},
+      {"id":"c","label":"Ignorieren", "effects":{"growth":-4,"health":-3}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "ca_mangel",
+    "title": "Calcium-Mangel",
+    "text": "Neue Triebspitzen zeigen Nekrosepunkte. Ca-Versorgung fraglich.",
+    "condition": {"all":[],"any":[{"field":"health","op":"<","value":62},{"field":"nutrition","op":"<","value":42}]},
+    "choices": [
+      {"id":"a","label":"Ca gezielt ergänzen", "effects":{"health":4,"nutrition":5}, "delayed":[{"inMin":180,"effects":{"health":3}}]},
+      {"id":"b","label":"Nur pH korrigieren", "effects":{"risk":-2}, "delayed":[{"inMin":180,"effects":{"health":1}}]},
+      {"id":"c","label":"Nicht reagieren", "effects":{"health":-6,"growth":-3}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "dunkle_blaetter_n",
+    "title": "Blattfarbe sehr dunkel (N-Überschuss)",
+    "text": "Dunkelgrüne Blätter und weiches Gewebe sprechen für N-Überschuss.",
+    "condition": {"all":[{"field":"nutrition","op":">","value":82}],"any":[]},
+    "choices": [
+      {"id":"a","label":"N reduzieren", "effects":{"nutrition":-10,"health":2}, "delayed":[]},
+      {"id":"b","label":"Beobachten", "effects":{"risk":2}, "delayed":[]},
+      {"id":"c","label":"Weiter erhöhen", "effects":{"risk":8,"health":-5,"flags.saltBuildUp":true}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "bluete_stagniert",
+    "title": "Blüte stagniert",
+    "text": "Seit Tagen kaum Fortschritt im Blütenansatz.",
+    "condition": {"all":[{"field":"growth","op":">","value":62}],"any":[{"field":"health","op":"<","value":68},{"field":"nutrition","op":"<","value":48}]},
+    "choices": [
+      {"id":"a","label":"Ursachenanalyse + Feinjustierung", "effects":{"health":4,"stress":-3}, "delayed":[{"inMin":240,"effects":{"growth":5}}]},
+      {"id":"b","label":"Nur PK erhöhen", "effects":{"nutrition":8,"risk":3}, "delayed":[]},
+      {"id":"c","label":"Abwarten", "effects":{"growth":-4,"health":-4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "ph_nicht_gemessen",
+    "title": "pH im Gießwasser nicht gemessen",
+    "text": "Heute wurde ohne Messung gegossen. Das erhöht Unsicherheit.",
+    "condition": {"all":[],"any":[]},
+    "choices": [
+      {"id":"a","label":"Sofort nachmessen", "effects":{"risk":-4,"stress":-2}, "delayed":[]},
+      {"id":"b","label":"Beim nächsten Mal", "effects":{"risk":2}, "delayed":[]},
+      {"id":"c","label":"Für unnötig halten", "effects":{"risk":6,"health":-2}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "trauermuecken",
+    "title": "Trauermücken",
+    "text": "Kleine Fliegen über dem Substrat deuten auf zu feuchte Oberfläche hin.",
+    "condition": {"all":[],"any":[{"field":"water","op":">","value":70},{"field":"risk","op":">","value":50}]},
+    "choices": [
+      {"id":"a","label":"Gelbtafeln + Oberfläche trocknen", "effects":{"risk":-7,"water":-6}, "delayed":[]},
+      {"id":"b","label":"Nur Gelbtafeln", "effects":{"risk":-3}, "delayed":[]},
+      {"id":"c","label":"Ignorieren", "effects":{"risk":8,"health":-4}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "nachtabsenkung_fehlend",
+    "title": "Nachtabsenkung fehlt",
+    "text": "Tag/Nacht-Differenz ist gering, Stoffwechselrhythmus wirkt flach.",
+    "condition": {"all":[],"any":[{"field":"stress","op":">","value":45},{"field":"growth","op":">","value":40}]},
+    "choices": [
+      {"id":"a","label":"Leichte Absenkung einführen", "effects":{"stress":-4,"health":2}, "delayed":[{"inMin":180,"effects":{"growth":3}}]},
+      {"id":"b","label":"Unverändert lassen", "effects":{"growth":-1}, "delayed":[]},
+      {"id":"c","label":"Noch wärmere Nächte", "effects":{"stress":6,"health":-3}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "vorbluete",
+    "title": "Wachstumsphase endet / Vorblüte",
+    "text": "Die Pflanze signalisiert den Übergang in die Vorblüte.",
+    "condition": {"all":[{"field":"growth","op":">","value":48}],"any":[]},
+    "choices": [
+      {"id":"a","label":"Schema schrittweise umstellen", "effects":{"nutrition":4,"health":2}, "delayed":[{"inMin":240,"effects":{"growth":4}}]},
+      {"id":"b","label":"Noch vegetativ fahren", "effects":{"growth":1,"stress":2}, "delayed":[]},
+      {"id":"c","label":"Abrupter Wechsel", "effects":{"stress":5,"risk":3}, "delayed":[]}
+    ]
+  },
+  {
+    "eventId": "ec_steigt_drain",
+    "title": "EC steigt trotz gleicher Düngung (Drain höher)",
+    "text": "Trotz gleicher Nährlösung steigt der Drain-EC weiter an.",
+    "condition": {"all":[],"any":[{"field":"flags.saltBuildUp","op":"==","value":true},{"field":"nutrition","op":">","value":76}]},
+    "choices": [
+      {"id":"a","label":"Spülen + EC neu kalibrieren", "effects":{"nutrition":-16,"risk":-6,"flags.saltBuildUp":false}, "delayed":[{"inMin":180,"effects":{"health":3}}]},
+      {"id":"b","label":"Nährlösung nur leicht reduzieren", "effects":{"nutrition":-8,"flags.saltBuildUp":true}, "delayed":[]},
+      {"id":"c","label":"Messung anzweifeln", "effects":{"risk":8,"health":-5,"flags.saltBuildUp":true}, "delayed":[]}
+    ]
+  }
+]
