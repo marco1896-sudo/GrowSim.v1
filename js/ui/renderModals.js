@@ -4,10 +4,20 @@ export function renderEventModal(state, dom, onResolve) {
   const open = Boolean(state.currentEvent);
   dom.eventWrap.dataset.open = String(open);
   dom.eventWrap.hidden = !open;
+
+  if (open && dom.careWrap) {
+    dom.careWrap.dataset.open = 'false';
+    dom.careWrap.hidden = true;
+  }
+
   syncSheetBackdrop(dom);
   if (!open) return;
 
   dom.eventTitle.textContent = `⚡ ${state.currentEvent.title}`;
+  dom.eventBody.textContent = state.currentEvent.description;
+  dom.eventActions.innerHTML = '';
+
+  state.currentEvent.actions.forEach((choice) => {
   dom.eventBody.textContent = state.currentEvent.text;
   dom.eventActions.innerHTML = '';
 

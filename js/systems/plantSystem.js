@@ -1,39 +1,41 @@
-import { clamp01 } from '../core/state.js';
-
-const WATER_DRAIN = 0.0018;
-const NUTRITION_DRAIN = 0.0012;
+import { clamp100 } from '../core/state.js';
 
 export function tickPlant(state, minutes = 1) {
   const s = state.stats;
-  s.water = clamp01(s.water - WATER_DRAIN * minutes);
-  s.nutrition = clamp01(s.nutrition - NUTRITION_DRAIN * minutes);
 
-  const supplyLow = s.water < 0.34 || s.nutrition < 0.34;
-  const supplyGood = s.water > 0.55 && s.nutrition > 0.55;
+  s.water = clamp100(s.water - 0.18 * minutes);
+  s.nutrition = clamp100(s.nutrition - 0.12 * minutes);
 
-  const stressDelta = supplyLow ? 0.006 * minutes : supplyGood ? -0.0042 * minutes : -0.0012 * minutes;
-  s.stress = clamp01(s.stress + stressDelta);
+  let stressDelta = 0;
+  if (s.water < 30 || s.nutrition < 30) stressDelta += 0.10 * minutes;
+  if (s.water < 15 || s.nutrition < 15) stressDelta += 0.06 * minutes;
+  if (s.water > 55 && s.nutrition > 55) stressDelta -= 0.08 * minutes;
+  s.stress = clamp100(s.stress + stressDelta);
 
-  const stressPenalty = s.stress > 0.75 ? 0.0062 * minutes : s.stress > 0.5 ? 0.0034 * minutes : 0.0012 * minutes;
-  s.health = clamp01(s.health - stressPenalty + (supplyGood ? 0.0018 * minutes : 0));
+  let healthDelta = 0;
+  if (s.stress > 70) healthDelta -= 0.10 * minutes;
+  if (s.stress > 90) healthDelta -= 0.18 * minutes;
+  if (s.water > 45 && s.nutrition > 45 && s.stress < 40) healthDelta += 0.06 * minutes;
+  s.health = clamp100(s.health + healthDelta);
 
-  const growthGain = supplyGood && s.stress < 0.48 ? 0.0042 * minutes : 0.0005 * minutes;
-  s.growth = clamp01(s.growth + growthGain);
+  let growthDelta = 0;
+  if (s.water > 45 && s.nutrition > 45 && s.stress < 55) growthDelta += 0.10 * minutes;
+  if (s.water > 35 && s.nutrition > 35 && s.stress < 70) growthDelta += 0.04 * minutes;
+  if (s.water < 20 || s.nutrition < 20) growthDelta -= 0.06 * minutes;
+  if (state.plantStage === 'flower' && growthDelta > 0) growthDelta *= 0.5;
+  s.growth = clamp100(s.growth + growthDelta);
 
-  const riskBase = (1 - s.health) * 0.48 + s.stress * 0.34 + (1 - s.water) * 0.1 + (1 - s.nutrition) * 0.08;
-  s.risk = clamp01(riskBase);
-
-  if (s.growth > 0.75) state.plantStage = 'flower';
-  else if (s.growth > 0.35) state.plantStage = 'veg';
+  if (s.growth >= 70) state.plantStage = 'flower';
+  else if (s.growth >= 35) state.plantStage = 'veg';
   else state.plantStage = 'seedling';
 }
 
 export function applyAction(state, action) {
   const s = state.stats;
-  if (action === 'water') s.water = clamp01(s.water + 0.16);
-  if (action === 'feed') s.nutrition = clamp01(s.nutrition + 0.14);
+  if (action === 'water') s.water = clamp100(s.water + 16);
+  if (action === 'feed') s.nutrition = clamp100(s.nutrition + 14);
   if (action === 'prune') {
-    s.stress = clamp01(s.stress - 0.08);
-    s.growth = clamp01(s.growth + 0.02);
+    s.stress = clamp100(s.stress - 8);
+    s.growth = clamp100(s.growth + 2);
   }
 }

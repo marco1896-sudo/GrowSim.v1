@@ -1,6 +1,6 @@
 import { loadState, saveState } from './core/storage.js';
 import { setSeed } from './core/rng.js';
-import { updateEngine } from './core/engine.js';
+import { fastForward, updateEngine } from './core/engine.js';
 import { loadEvents, resolveEventAction } from './systems/eventSystem.js';
 import { dom } from './ui/dom.js';
 import { renderDashboard } from './ui/renderDashboard.js';
@@ -40,6 +40,15 @@ function commit(logLabel) {
   saveState(stateRef.current);
 }
 
-wireControls(stateRef, dom, commit);
+wireControls(stateRef, dom, commit, {
+  fastForwardMinutes: (minutes) => {
+    stateRef.current = fastForward(stateRef.current, events, minutes);
+  }
+});
+
 commit();
-setInterval(() => commit(), 1000);
+
+if (window.__growsimTickInterval) {
+  window.clearInterval(window.__growsimTickInterval);
+}
+window.__growsimTickInterval = window.setInterval(() => commit(), 1000);

@@ -2,6 +2,7 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grow Simulator HUD</title>
     <link rel="stylesheet" href="./css/tokens.css" />
@@ -56,12 +57,71 @@
           <div class="time-pill" data-ui="sim-time">00:00</div>
         </section>
 
+        <div class="hud__mini c-card metrics-card">
         <div class="hud__mini c-card">
           <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="water"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="7"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="7"></circle></svg><div class="c-ring__label">Water<small class="c-ring__value-text" data-role="value"></small></div></article>
           <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="nutrition"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="7"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="7"></circle></svg><div class="c-ring__label">Nutrition<small class="c-ring__value-text" data-role="value"></small></div></article>
           <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="growth"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="7"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="7"></circle></svg><div class="c-ring__label">Growth<small class="c-ring__value-text" data-role="value"></small></div></article>
           <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="risk"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="7"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="7"></circle></svg><div class="c-ring__label">Risk<small class="c-ring__value-text" data-role="value"></small></div></article>
         </div>
+
+        <div class="main-actions">
+          <button class="c-btn c-btn--primary" data-action="open-care">Pflege</button>
+          <button class="c-btn" data-action="open-analysis">Analyse</button>
+          <button class="c-btn" data-action="boost-ad">
+            +30 Min Boost
+            <small data-ui="boost-meta">Ad supported · 0/6 today</small>
+          </button>
+        </div>
+
+        <article class="locked-card c-card">
+          <h3>🔒 Erweiterte Diagnose verfügbar</h3>
+          <p>Schalte mit <strong>Pro</strong> frei oder schaue eine Ad.</p>
+        </article>
+
+        <div class="c-alert-banner" data-ui="alert-banner" data-state="normal"></div>
+      </section>
+
+      <section class="screen c-card" data-screen="analysis" data-locked="true" hidden>
+        <h2><svg width="16" height="16"><use href="#i-analysis"/></svg> Analyse</h2>
+        <div class="analysis-data"></div>
+        <div class="analysis-lock c-card">🔒 Premium-Diagnose gesperrt — nutze Analyse Ad.</div>
+        <button class="c-btn" data-action="analysis-ad">Analyse per Ad freischalten</button>
+        <section class="log-card">
+          <h3>Log</h3>
+          <ul data-ui="history"></ul>
+        </section>
+        <div class="analysis-actions">
+          <button class="c-btn" data-action="open-dashboard">Zurück</button>
+          <button class="c-btn" data-action="export-telemetry">Export JSONL</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="sheet-backdrop" data-ui="sheet-backdrop" hidden></div>
+
+    <div class="sheet-wrap" data-ui="care-wrap" data-open="false" hidden>
+      <article class="sheet">
+        <header class="sheet__header"><h3>Pflege-Menü</h3></header>
+        <div class="sheet__content care-actions">
+          <button class="c-btn" data-action="water">Wasser</button>
+          <button class="c-btn" data-action="feed">Feed</button>
+          <button class="c-btn" data-action="prune">Prune</button>
+          <button class="c-btn" data-action="open-dashboard">Dashboard</button>
+          <button class="c-btn c-btn--danger" data-action="emergency-ad" data-prominent="false">Emergency / Rescue</button>
+          <button class="c-btn" data-action="close-care">Schließen</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="sheet-wrap" data-ui="event-wrap" data-open="false" hidden>
+      <article class="sheet">
+        <header class="sheet__header"><h3 data-ui="event-title"></h3></header>
+        <p data-ui="event-body"></p>
+        <div class="event-actions" data-ui="event-actions"></div>
+      </article>
+    </div>
+
 
         <div class="main-actions">
           <button class="c-btn c-btn--primary" data-action="open-care">Pflege</button>
