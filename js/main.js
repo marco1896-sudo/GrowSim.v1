@@ -10,13 +10,27 @@ import { wireControls } from './ui/controls.js';
 setSeed(424242);
 
 const stateRef = { current: loadState() };
-const events = await loadEvents();
+let events = [];
+
+try {
+  events = await loadEvents();
+  if (dom.loadError) dom.loadError.hidden = true;
+} catch (error) {
+  const msg = `Events konnten nicht geladen werden: ${error.message}`;
+  if (dom.loadError) {
+    dom.loadError.hidden = false;
+    dom.loadError.textContent = msg;
+  } else {
+    alert(msg);
+  }
+}
 
 function commit(logLabel) {
   if (logLabel) {
     stateRef.current.history.unshift({ t: Date.now(), type: 'action', label: logLabel });
     stateRef.current.history = stateRef.current.history.slice(0, 20);
   }
+
   stateRef.current = updateEngine(stateRef.current, events);
   renderDashboard(stateRef.current, dom);
   renderEventModal(stateRef.current, dom, (id) => {

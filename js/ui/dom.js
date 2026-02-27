@@ -2,6 +2,7 @@ export const dom = {
   root: document.documentElement,
   statusChip: document.querySelector('[data-ui="status-chip"]'),
   alertBanner: document.querySelector('[data-ui="alert-banner"]'),
+  loadError: document.querySelector('[data-ui="load-error"]'),
   plant: document.querySelector('.c-plant'),
   largeRings: [...document.querySelectorAll('[data-ring-size="large"]')],
   miniRings: [...document.querySelectorAll('[data-ring-size="mini"]')],
@@ -15,5 +16,6 @@ export const dom = {
   eventActions: document.querySelector('[data-ui="event-actions"]'),
   toast: document.querySelector('[data-ui="toast"]'),
   scanline: document.querySelector('[data-ui="scanline"]'),
-  dangerButton: document.querySelector('[data-action="emergency-ad"]')
+  dangerButton: document.querySelector('[data-action="emergency-ad"]'),
+  exportButton: document.querySelector('[data-action="export-telemetry"]')
 };
