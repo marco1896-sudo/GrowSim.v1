@@ -119,9 +119,16 @@ export function maybeTriggerEvent(state, events) {
     scheduleNextEvent(state, now);
     return;
   }
+  if (Date.now() < state.eventCooldownUntil) return;
+
+  const eligible = events.filter((event) => evalCondition(state, event.condition));
+  if (!eligible.length) return;
 
   const filtered = eligible.filter((event) => event.eventId !== state.lastEventId);
   const pool = filtered.length ? filtered : eligible;
+
+  const chance = 0.05 + state.stats.risk * 0.09;
+  if (rand() > chance) return;
 
   const idx = Math.floor(rand() * pool.length);
   state.currentEvent = pool[idx];
@@ -138,6 +145,7 @@ export function resolveEventAction(state, choiceId) {
   const now = Date.now();
   state.lastEventId = state.currentEvent.eventId;
   scheduleNextEvent(state, now);
+  state.eventCooldownUntil = now + 45 * 60 * 1000;
 
   state.history.unshift({ t: now, type: 'event', label: `${state.currentEvent.title}: ${picked.label}` });
   state.history = state.history.slice(0, 20);
