@@ -93,7 +93,68 @@
           <button class="c-btn" data-action="export-telemetry">Export JSONL</button>
         </div>
       </section>
+      <section class="hud c-card" data-screen="dashboard">
+        <div class="hud__top">
+          <span class="c-status-chip" data-ui="status-chip" data-state="normal">Status: normal</span>
+          <span>Ads heute: <strong data-ui="ad-count">0/6</strong></span>
+        </div>
+
+        <div class="hud__rings">
+          <article class="c-ring" data-ring-size="large" data-ring="health"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="42" stroke-width="12"></circle><circle class="c-ring__value" cx="50" cy="50" r="42" stroke-width="12"></circle></svg><div class="c-ring__label"><span>Health<small class="c-ring__value-text" data-role="value">0%</small></span></div></article>
+          <article class="c-ring" data-ring-size="large" data-ring="stress"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="42" stroke-width="12"></circle><circle class="c-ring__value" cx="50" cy="50" r="42" stroke-width="12"></circle></svg><div class="c-ring__label"><span>Stress<small class="c-ring__value-text" data-role="value">0%</small></span></div></article>
+        </div>
+
+        <div class="c-plant" data-stage="seedling" data-ui-state="normal">
+          <div class="c-plant__glow"></div>
+          <svg viewBox="0 0 220 220">
+            <g data-stage-group="seedling"><path d="M110 174V116" stroke="#7fffcf" stroke-width="6"/><path d="M110 124C84 124 70 100 70 78C96 78 110 96 110 124Z" fill="#4cffb3"/><path d="M110 132C136 132 150 108 150 86C124 86 110 104 110 132Z" fill="#6bffd0"/></g>
+            <g data-stage-group="veg"><path d="M110 178V78" stroke="#7fffcf" stroke-width="7"/><path d="M110 128C78 128 54 104 56 64C88 64 110 86 110 128Z" fill="#4cffb3"/><path d="M110 114C142 114 166 90 164 50C132 50 110 72 110 114Z" fill="#61ffc4"/></g>
+            <g data-stage-group="flower"><path d="M110 182V82" stroke="#7fffcf" stroke-width="7"/><circle cx="110" cy="70" r="18" fill="#ffe98f"/><ellipse cx="110" cy="42" rx="12" ry="26" fill="#ff6f91"/><path d="M110 130C82 130 58 108 60 68C88 68 110 90 110 130Z" fill="#56ffbc"/></g>
+          </svg>
+        </div>
+
+        <div class="hud__mini">
+          <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="water"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="6"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="6"></circle></svg><div class="c-ring__label">Water<small class="c-ring__value-text" data-role="value"></small></div></article>
+          <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="nutrition"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="6"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="6"></circle></svg><div class="c-ring__label">Nutrition<small class="c-ring__value-text" data-role="value"></small></div></article>
+          <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="growth"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="6"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="6"></circle></svg><div class="c-ring__label">Growth<small class="c-ring__value-text" data-role="value"></small></div></article>
+          <article class="c-ring c-ring--mini" data-ring-size="mini" data-ring="risk"><svg viewBox="0 0 100 100"><circle class="c-ring__track" cx="50" cy="50" r="40" stroke-width="6"></circle><circle class="c-ring__value" cx="50" cy="50" r="40" stroke-width="6"></circle></svg><div class="c-ring__label">Risk<small class="c-ring__value-text" data-role="value"></small></div></article>
+        </div>
+        <div class="c-alert-banner" data-ui="alert-banner" data-state="normal"></div>
+      </section>
+
+      <section class="screen c-card" data-screen="analysis" data-locked="true" hidden>
+        <h2><svg width="16" height="16"><use href="#i-analysis"/></svg> Analyse</h2>
+        <div class="analysis-data"></div>
+        <div class="analysis-lock">Analyse gesperrt — schaue eine Ad, um die Daten freizuschalten.</div>
+      </section>
+
+      <section class="screen c-card">
+        <h3>Log</h3>
+        <ul data-ui="history"></ul>
+      </section>
+
+      <div class="l-actions">
+        <div class="actions-grid">
+          <button class="c-btn" data-action="water"><svg width="16" height="16"><use href="#i-water"/></svg> Wasser</button>
+          <button class="c-btn" data-action="feed"><svg width="16" height="16"><use href="#i-feed"/></svg> Feed</button>
+          <button class="c-btn" data-action="prune"><svg width="16" height="16"><use href="#i-growth"/></svg> Prune</button>
+          <button class="c-btn" data-action="open-dashboard">Dashboard</button>
+          <button class="c-btn" data-action="open-analysis">Analyse</button>
+          <button class="c-btn c-btn--danger" data-action="emergency-ad" data-prominent="false">Emergency Ad</button>
+          <button class="c-btn" data-action="export-telemetry">Export JSONL</button>
+        </div>
+      </div>
     </div>
+
+    <div class="c-modal-wrap" data-ui="event-wrap" data-open="false">
+      <article class="c-modal">
+        <h3 data-ui="event-title"></h3>
+        <p data-ui="event-body"></p>
+        <div class="event-actions" data-ui="event-actions"></div>
+      </article>
+    </div>
+    <div class="c-toast" data-ui="toast"></div>
+    <div class="c-scanline" data-ui="scanline"></div>
 
     <div class="sheet-backdrop" data-ui="sheet-backdrop" hidden></div>
 

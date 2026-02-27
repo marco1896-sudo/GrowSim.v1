@@ -13,6 +13,7 @@ export function createInitialState() {
     adViewsToday: 0,
     lastEventId: null,
     nextEventAt: 0,
+    eventCooldownUntil: 0,
     pendingEffects: [],
     flags: {
       saltBuildUp: false
