@@ -1,17 +1,22 @@
+import { syncSheetBackdrop } from './controls.js';
+
 export function renderEventModal(state, dom, onResolve) {
   const open = Boolean(state.currentEvent);
   dom.eventWrap.dataset.open = String(open);
+  dom.eventWrap.hidden = !open;
+  syncSheetBackdrop(dom);
   if (!open) return;
 
-  dom.eventTitle.textContent = state.currentEvent.title;
-  dom.eventBody.textContent = state.currentEvent.body;
+  dom.eventTitle.textContent = `⚡ ${state.currentEvent.title}`;
+  dom.eventBody.textContent = state.currentEvent.text;
   dom.eventActions.innerHTML = '';
-  state.currentEvent.actions.forEach((action) => {
+
+  state.currentEvent.choices.forEach((choice) => {
     const button = document.createElement('button');
     button.className = 'c-btn';
     button.type = 'button';
-    button.textContent = action.label;
-    button.addEventListener('click', () => onResolve(action.id), { once: true });
+    button.textContent = choice.label;
+    button.addEventListener('click', () => onResolve(choice.id), { once: true });
     dom.eventActions.appendChild(button);
   });
 }

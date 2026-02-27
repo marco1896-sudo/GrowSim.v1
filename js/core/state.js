@@ -11,6 +11,13 @@ export function createInitialState() {
     plantStage: 'seedling',
     analysisUnlocked: false,
     adViewsToday: 0,
+    lastEventId: null,
+    nextEventAt: 0,
+    pendingEffects: [],
+    flags: {
+      saltBuildUp: false
+    },
+    telemetry: [],
     stats: {
       health: 0.82,
       stress: 0.22,
