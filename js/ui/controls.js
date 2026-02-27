@@ -7,6 +7,8 @@ let controlsWired = false;
 function downloadJsonl(lines, fileName) {
   const safeLines = Array.isArray(lines) ? lines : [];
   const blob = new Blob([`${safeLines.join('\n')}\n`], { type: 'application/x-ndjson' });
+function downloadJsonl(lines, fileName) {
+  const blob = new Blob([`${lines.join('\n')}\n`], { type: 'application/x-ndjson' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -46,6 +48,13 @@ export function wireControls(stateRef, dom, commit, services = {}) {
   controlsWired = true;
 
   on('[data-action="water"]', () => {
+  if (dom.sheetBackdrop) {
+    dom.sheetBackdrop.hidden = !(eventOpen || careOpen);
+  }
+}
+
+export function wireControls(stateRef, dom, commit) {
+  document.querySelector('[data-action="water"]').addEventListener('click', () => {
     applyAction(stateRef.current, 'water');
     commit('Wasser gegeben');
   });
@@ -61,11 +70,13 @@ export function wireControls(stateRef, dom, commit, services = {}) {
   });
 
   onAll('[data-action="open-dashboard"]', () => {
+  document.querySelector('[data-action="open-dashboard"]').addEventListener('click', () => {
     toggleScreen('dashboard');
     setSheet(dom, false, 'care');
   });
 
   onAll('[data-action="open-analysis"]', () => {
+  document.querySelector('[data-action="open-analysis"]').addEventListener('click', () => {
     toggleScreen('analysis');
     setSheet(dom, false, 'care');
   });
@@ -79,6 +90,7 @@ export function wireControls(stateRef, dom, commit, services = {}) {
   });
 
   dom.dangerButton?.addEventListener('click', () => {
+  dom.dangerButton.addEventListener('click', () => {
     const result = useAd(stateRef.current, 'rescue');
     if (!result.ok) {
       commit(result.reason);
@@ -89,6 +101,9 @@ export function wireControls(stateRef, dom, commit, services = {}) {
       dom.toast.dataset.show = 'true';
     }
     if (dom.scanline) dom.scanline.dataset.active = 'true';
+    dom.toast.textContent = 'Emergency-Ad abgeschlossen.';
+    dom.toast.dataset.show = 'true';
+    dom.scanline.dataset.active = 'true';
     setTimeout(() => {
       if (dom.toast) dom.toast.dataset.show = 'false';
       if (dom.scanline) dom.scanline.dataset.active = 'false';
@@ -120,6 +135,15 @@ export function wireControls(stateRef, dom, commit, services = {}) {
     downloadJsonl(stateRef.current.telemetry, `growsim-telemetry-${Date.now()}.jsonl`);
     commit('Telemetry exportiert');
   });
+    commit('Boost-Ad verwendet (+30 Min Demo)');
+  });
+
+  if (dom.exportButton) {
+    dom.exportButton.addEventListener('click', () => {
+      downloadJsonl(stateRef.current.telemetry, `growsim-telemetry-${Date.now()}.jsonl`);
+      commit('Telemetry exportiert');
+    });
+  }
 }
 
 export function syncSheetBackdrop(dom) {

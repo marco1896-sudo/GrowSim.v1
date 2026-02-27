@@ -1,11 +1,11 @@
 export const dom = {
-  root: document.documentElement,
   statusChip: document.querySelector('[data-ui="status-chip"]'),
   alertBanner: document.querySelector('[data-ui="alert-banner"]'),
   loadError: document.querySelector('[data-ui="load-error"]'),
   plant: document.querySelector('.c-plant'),
   largeRings: [...document.querySelectorAll('[data-ring-size="large"]')],
   miniRings: [...document.querySelectorAll('[data-ring-size="mini"]')],
+  adCount: document.querySelector('[data-ui="ad-count"]'),
   boostMeta: document.querySelector('[data-ui="boost-meta"]'),
   nextEvent: document.querySelector('[data-ui="next-event"]'),
   nextEventMeta: document.querySelector('[data-ui="next-event-meta"]'),

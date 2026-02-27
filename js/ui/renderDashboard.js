@@ -30,6 +30,20 @@ function formatCountdown(minutes) {
   return `${mm}:${ss}`;
 }
 
+function formatTime(dateMs) {
+  const d = new Date(dateMs);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function formatCountdown(ms) {
+  const sec = Math.max(0, Math.floor(ms / 1000));
+  const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+  const ss = String(sec % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+
 export function renderDashboard(state, dom) {
   const s = state.stats;
 
@@ -59,6 +73,21 @@ export function renderDashboard(state, dom) {
   if (dom.dangerButton) {
     dom.dangerButton.disabled = !isEmergencyAvailable(state);
     dom.dangerButton.dataset.prominent = String(isEmergencyAvailable(state));
+  if (dom.adCount) dom.adCount.textContent = `${state.adViewsToday}/6`;
+  if (dom.boostMeta) dom.boostMeta.textContent = `Ad supported · ${state.adViewsToday}/6 today`;
+  if (dom.simTime) dom.simTime.textContent = formatTime(Date.now());
+  if (dom.nextEvent) dom.nextEvent.textContent = `in ${formatCountdown((state.nextEventAt || Date.now()) - Date.now())}`;
+  if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Ereignis aktiv' : 'Nächstes Lernereignis';
+
+  dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);
+  if (state.analysisUnlocked) {
+    const a = getAnalysisSnapshot(state);
+    dom.analysisData.innerHTML = `
+      <div>Hydration: <strong>${a.hydration}%</strong></div>
+      <div>Nutrition: <strong>${a.nutrition}%</strong></div>
+      <div>Resilience: <strong>${a.resilience}%</strong></div>
+      <div>${a.recommendation}</div>
+    `;
   }
 
   dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);

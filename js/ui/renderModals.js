@@ -18,6 +18,13 @@ export function renderEventModal(state, dom, onResolve) {
   dom.eventActions.innerHTML = '';
 
   state.currentEvent.actions.forEach((choice) => {
+  dom.eventBody.textContent = state.currentEvent.text;
+  dom.eventActions.innerHTML = '';
+
+  dom.eventTitle.textContent = state.currentEvent.title;
+  dom.eventBody.textContent = state.currentEvent.text;
+  dom.eventActions.innerHTML = '';
+  state.currentEvent.choices.forEach((choice) => {
     const button = document.createElement('button');
     button.className = 'c-btn';
     button.type = 'button';

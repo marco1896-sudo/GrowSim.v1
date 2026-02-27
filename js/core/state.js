@@ -16,6 +16,9 @@ export function createInitialState() {
     lastEventId: null,
     eventCooldownMin: 0,
     minutesSinceLastEventRoll: 0,
+    lastEventId: null,
+    nextEventAt: 0,
+    eventCooldownUntil: 0,
     pendingEffects: [],
     flags: {
       saltBuildUp: false

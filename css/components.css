@@ -39,6 +39,8 @@
 }
 .c-ring__track { stroke: rgba(76, 97, 146, 0.48); }
 .c-ring__value { stroke: var(--color-primary); transition: stroke-dashoffset var(--motion-med) ease; filter: drop-shadow(0 0 6px rgba(138, 232, 115, 0.45)); }
+.c-ring__track { stroke: var(--color-track); }
+.c-ring__value { stroke: var(--color-primary); transition: stroke-dashoffset var(--motion-med) ease; }
 
 .c-ring[data-ring='stress'] .c-ring__value,
 .c-ring[data-ring='risk'] .c-ring__value { stroke: var(--color-danger); }
@@ -149,6 +151,19 @@
   60% { transform: translateY(0) scale(1.03); }
   100% { transform: translateY(0) scale(1); }
 }
+}
+
+.sheet {
+  background: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: var(--space-lg);
+  transform: translateY(110%);
+  transition: transform var(--motion-med) ease;
+}
+
+.sheet-wrap[data-open='true'] { pointer-events: auto; }
+.sheet-wrap[data-open='true'] .sheet { transform: translateY(0); }
 
 .sheet__header h3 { margin: 0 0 var(--space-sm); font-size: 1.06rem; }
 
@@ -189,6 +204,7 @@
   background: linear-gradient(90deg, transparent, rgba(180, 205, 255, 0.22), transparent);
   pointer-events: none;
 }
+.c-toast[data-show='true'] { opacity: 1; transform: translateY(0); }
 
 .c-ring--mini {
   width: 78px;
@@ -214,3 +230,6 @@
 @media (max-width: 370px) {
   .metrics-card::before { display: none; }
 }
+.c-scanline { position: fixed; inset: 0; pointer-events:none; z-index: 39; opacity: 0; }
+.c-scanline[data-active='true'] { animation: scan 180ms linear; }
+@keyframes scan { 0%{opacity:0} 20%{opacity:1} 100%{opacity:0} }
