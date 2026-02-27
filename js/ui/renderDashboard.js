@@ -14,6 +14,20 @@ function setRing(node, value, c) {
   node.querySelector('[data-role="value"]').textContent = `${Math.round(value)}%`;
 }
 
+function formatTime(dateMs) {
+  const d = new Date(dateMs);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function formatCountdown(ms) {
+  const sec = Math.max(0, Math.floor(ms / 1000));
+  const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+  const ss = String(sec % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+
 export function renderDashboard(state, dom) {
   const s = state.stats;
   const statsPct = Object.fromEntries(Object.entries(s).map(([k, v]) => [k, v * 100]));
@@ -36,7 +50,12 @@ export function renderDashboard(state, dom) {
   dom.largeRings[0].classList.toggle('k-critical-pulse', state.uiState === 'critical');
   dom.dangerButton.dataset.prominent = state.uiState !== 'normal';
 
-  dom.adCount.textContent = `${state.adViewsToday}/6`;
+  if (dom.adCount) dom.adCount.textContent = `${state.adViewsToday}/6`;
+  if (dom.boostMeta) dom.boostMeta.textContent = `Ad supported · ${state.adViewsToday}/6 today`;
+  if (dom.simTime) dom.simTime.textContent = formatTime(Date.now());
+  if (dom.nextEvent) dom.nextEvent.textContent = `in ${formatCountdown((state.nextEventAt || Date.now()) - Date.now())}`;
+  if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Ereignis aktiv' : 'Nächstes Lernereignis';
+
   dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);
   if (state.analysisUnlocked) {
     const a = getAnalysisSnapshot(state);

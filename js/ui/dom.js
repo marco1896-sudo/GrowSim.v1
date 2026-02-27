@@ -1,5 +1,4 @@
 export const dom = {
-  root: document.documentElement,
   statusChip: document.querySelector('[data-ui="status-chip"]'),
   alertBanner: document.querySelector('[data-ui="alert-banner"]'),
   loadError: document.querySelector('[data-ui="load-error"]'),
@@ -7,6 +6,10 @@ export const dom = {
   largeRings: [...document.querySelectorAll('[data-ring-size="large"]')],
   miniRings: [...document.querySelectorAll('[data-ring-size="mini"]')],
   adCount: document.querySelector('[data-ui="ad-count"]'),
+  boostMeta: document.querySelector('[data-ui="boost-meta"]'),
+  nextEvent: document.querySelector('[data-ui="next-event"]'),
+  nextEventMeta: document.querySelector('[data-ui="next-event-meta"]'),
+  simTime: document.querySelector('[data-ui="sim-time"]'),
   analysisScreen: document.querySelector('[data-screen="analysis"]'),
   analysisData: document.querySelector('.analysis-data'),
   historyList: document.querySelector('[data-ui="history"]'),
@@ -14,8 +17,13 @@ export const dom = {
   eventTitle: document.querySelector('[data-ui="event-title"]'),
   eventBody: document.querySelector('[data-ui="event-body"]'),
   eventActions: document.querySelector('[data-ui="event-actions"]'),
+  careWrap: document.querySelector('[data-ui="care-wrap"]'),
+  sheetBackdrop: document.querySelector('[data-ui="sheet-backdrop"]'),
   toast: document.querySelector('[data-ui="toast"]'),
   scanline: document.querySelector('[data-ui="scanline"]'),
   dangerButton: document.querySelector('[data-action="emergency-ad"]'),
+  boostButton: document.querySelector('[data-action="boost-ad"]'),
+  openCareButton: document.querySelector('[data-action="open-care"]'),
+  closeCareButton: document.querySelector('[data-action="close-care"]'),
   exportButton: document.querySelector('[data-action="export-telemetry"]')
 };

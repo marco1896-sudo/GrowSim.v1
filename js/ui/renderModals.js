@@ -1,7 +1,15 @@
+import { syncSheetBackdrop } from './controls.js';
+
 export function renderEventModal(state, dom, onResolve) {
   const open = Boolean(state.currentEvent);
   dom.eventWrap.dataset.open = String(open);
+  dom.eventWrap.hidden = !open;
+  syncSheetBackdrop(dom);
   if (!open) return;
+
+  dom.eventTitle.textContent = `⚡ ${state.currentEvent.title}`;
+  dom.eventBody.textContent = state.currentEvent.text;
+  dom.eventActions.innerHTML = '';
 
   dom.eventTitle.textContent = state.currentEvent.title;
   dom.eventBody.textContent = state.currentEvent.text;
