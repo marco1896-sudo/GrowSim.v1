@@ -1,6 +1,8 @@
 import { rand } from '../core/rng.js';
 
 const SUPPORTED_OPS = new Set(['<', '<=', '>', '>=', '==', '!=']);
+const EVENT_INTERVAL_MIN_MS = 30 * 1000;
+const EVENT_INTERVAL_MAX_MS = 60 * 1000;
 
 export function getByPath(obj, path) {
   if (!obj || typeof path !== 'string' || !path) return undefined;
@@ -31,6 +33,11 @@ function readFieldValue(state, field) {
   const val = getByPath(state, path);
   if (path.startsWith('stats.') && typeof val === 'number') return val * 100;
   return val;
+}
+
+function scheduleNextEvent(state, now = Date.now()) {
+  const jitter = EVENT_INTERVAL_MIN_MS + Math.floor(rand() * (EVENT_INTERVAL_MAX_MS - EVENT_INTERVAL_MIN_MS + 1));
+  state.nextEventAt = now + jitter;
 }
 
 export function evalRule(state, rule) {
@@ -98,6 +105,20 @@ export async function loadEvents() {
 
 export function maybeTriggerEvent(state, events) {
   if (state.currentEvent) return;
+
+  const now = Date.now();
+  if (typeof state.nextEventAt !== 'number' || state.nextEventAt <= 0) {
+    scheduleNextEvent(state, now);
+    return;
+  }
+
+  if (now < state.nextEventAt) return;
+
+  const eligible = events.filter((event) => evalCondition(state, event.condition));
+  if (!eligible.length) {
+    scheduleNextEvent(state, now);
+    return;
+  }
   if (Date.now() < state.eventCooldownUntil) return;
 
   const eligible = events.filter((event) => evalCondition(state, event.condition));
@@ -123,6 +144,7 @@ export function resolveEventAction(state, choiceId) {
 
   const now = Date.now();
   state.lastEventId = state.currentEvent.eventId;
+  scheduleNextEvent(state, now);
   state.eventCooldownUntil = now + 45 * 60 * 1000;
 
   state.history.unshift({ t: now, type: 'event', label: `${state.currentEvent.title}: ${picked.label}` });

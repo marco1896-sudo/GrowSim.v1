@@ -10,6 +10,7 @@ function normalizeState(parsed) {
   };
   if (!Array.isArray(merged.pendingEffects)) merged.pendingEffects = [];
   if (!Array.isArray(merged.telemetry)) merged.telemetry = [];
+  if (typeof merged.nextEventAt !== 'number') merged.nextEventAt = 0;
   return merged;
 }
 
