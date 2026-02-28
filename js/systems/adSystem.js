@@ -23,7 +23,6 @@ export function isEmergencyAvailable(state) {
 }
 
 export function useAd(state, rewardType = 'analysis') {
-export function useAd(state, rewardType = 'deep-analysis') {
   if (!canWatchAd(state)) {
     return { ok: false, reason: 'Tageslimit erreicht (6/Tag).' };
   }
@@ -41,16 +40,6 @@ export function useAd(state, rewardType = 'deep-analysis') {
   if (rewardType === 'rescue') {
     state.stats.health = clamp100(state.stats.health + 30);
     state.stats.stress = clamp100(state.stats.stress - 18);
-  }
-
-  state.history.unshift({ t: Date.now(), type: 'ad', label: `Ad gesehen (${rewardType})` });
-  state.history = state.history.slice(0, 20);
-  state.telemetry.push(JSON.stringify({ t: Date.now(), type: 'ad', rewardType }));
-  state.analysisUnlocked = true;
-
-  if (rewardType === 'rescue' && state.stats.health <= 0.4) {
-    state.stats.health = clamp01(state.stats.health + 0.3);
-    state.stats.stress = clamp01(state.stats.stress - 0.18);
   }
 
   state.history.unshift({ t: Date.now(), type: 'ad', label: `Ad gesehen (${rewardType})` });
