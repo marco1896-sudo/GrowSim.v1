@@ -1,8 +1,10 @@
 export const dom = {
+  root: document.querySelector('[data-ui="root"]') || document.documentElement,
   statusChip: document.querySelector('[data-ui="status-chip"]'),
   alertBanner: document.querySelector('[data-ui="alert-banner"]'),
   loadError: document.querySelector('[data-ui="load-error"]'),
   plant: document.querySelector('.c-plant'),
+  phaseLabel: document.querySelector('[data-ui="phase-label"]'),
   largeRings: [...document.querySelectorAll('[data-ring-size="large"]')],
   miniRings: [...document.querySelectorAll('[data-ring-size="mini"]')],
   adCount: document.querySelector('[data-ui="ad-count"]'),
@@ -25,5 +27,6 @@ export const dom = {
   boostButton: document.querySelector('[data-action="boost-ad"]'),
   openCareButton: document.querySelector('[data-action="open-care"]'),
   closeCareButton: document.querySelector('[data-action="close-care"]'),
+  closeEventButton: document.querySelector('[data-action="close-event"]'),
   exportButton: document.querySelector('[data-action="export-telemetry"]')
 };

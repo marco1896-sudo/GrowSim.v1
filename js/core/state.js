@@ -9,20 +9,30 @@ export function createInitialState() {
     simMinutes: 0,
     pausedReasons: {},
     uiState: 'normal',
+
     plantStage: 'seedling',
+    plantPhase: 'seedling',
+    plantSubStage: 'sprout',
+    phaseProgress: 0,
+    overallProgress: 8,
+    growthAgeMin: 0,
+    stageEnteredAt: now,
+    stageHistory: [],
+
     analysisUnlocked: false,
     adViewsToday: 0,
     adDayStamp: new Date(now).toISOString().slice(0, 10),
+
     lastEventId: null,
     eventCooldownMin: 0,
     minutesSinceLastEventRoll: 0,
-    lastEventId: null,
     nextEventAt: 0,
-    eventCooldownUntil: 0,
     pendingEffects: [],
+
     flags: {
       saltBuildUp: false
     },
+
     telemetry: [],
     stats: {
       health: 82,
@@ -39,7 +49,7 @@ export function createInitialState() {
 }
 
 export function clamp100(v) {
-  return Math.max(0, Math.min(100, v));
+  return Math.max(0, Math.min(100, Number.isFinite(v) ? v : 0));
 }
 
 export function computeUiState(stats) {

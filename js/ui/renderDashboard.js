@@ -3,34 +3,28 @@ import { isEmergencyAvailable, DAILY_AD_LIMIT } from '../systems/adSystem.js';
 
 const LARGE_C = 263.89;
 const MINI_C = 251.33;
-
 const ringKeys = {
-  health: 'health', stress: 'stress', water: 'water', nutrition: 'nutrition', growth: 'growth', risk: 'risk'
+  health: 'health',
+  stress: 'stress',
+  water: 'water',
+  nutrition: 'nutrition',
+  growth: 'growth',
+  risk: 'risk'
 };
 
-function setRing(node, value, c) {
+function setRing(node, value, circumference) {
+  if (!node) return;
   const safe = Math.max(0, Math.min(100, value || 0));
-  const offset = c - (safe / 100) * c;
-  node.querySelector('.c-ring__value').style.strokeDasharray = `${c}`;
-  node.querySelector('.c-ring__value').style.strokeDashoffset = `${offset}`;
-  node.querySelector('[data-role="value"]').textContent = `${Math.round(safe)}%`;
+  const offset = circumference - (safe / 100) * circumference;
+  const ring = node.querySelector('.c-ring__value');
+  const text = node.querySelector('[data-role="value"]');
+  if (!ring || !text) return;
+  ring.style.strokeDasharray = `${circumference}`;
+  ring.style.strokeDashoffset = `${offset}`;
+  text.textContent = `${Math.round(safe)}%`;
 }
 
-function formatTime(dateMs) {
-  const d = new Date(dateMs);
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${hh}:${mm}`;
-}
-
-function formatCountdown(minutes) {
-  const sec = Math.max(0, Math.floor((minutes || 0) * 60));
-  const mm = String(Math.floor(sec / 60)).padStart(2, '0');
-  const ss = String(sec % 60).padStart(2, '0');
-  return `${mm}:${ss}`;
-}
-
-function formatTime(dateMs) {
+function formatClock(dateMs) {
   const d = new Date(dateMs);
   const hh = String(d.getHours()).padStart(2, '0');
   const mm = String(d.getMinutes()).padStart(2, '0');
@@ -50,59 +44,63 @@ export function renderDashboard(state, dom) {
   dom.largeRings.forEach((ring) => setRing(ring, s[ringKeys[ring.dataset.ring]], LARGE_C));
   dom.miniRings.forEach((ring) => setRing(ring, s[ringKeys[ring.dataset.ring]], MINI_C));
 
-  dom.statusChip.dataset.state = state.uiState;
-  dom.statusChip.textContent = `Status: ${state.uiState}`;
-  dom.alertBanner.dataset.state = state.uiState;
-  dom.alertBanner.textContent = state.uiState === 'critical'
-    ? 'Kritischer Zustand erkannt — Rettungsaktionen nötig.'
-    : state.uiState === 'warning'
-      ? 'Warnung: Werte fallen in riskante Bereiche.'
-      : '';
+  if (dom.statusChip) {
+    dom.statusChip.dataset.state = state.uiState;
+    dom.statusChip.textContent = `Status: ${state.uiState}`;
+  }
+
+  if (dom.alertBanner) {
+    dom.alertBanner.dataset.state = state.uiState;
+    dom.alertBanner.textContent = state.uiState === 'critical'
+      ? 'Kritischer Zustand erkannt — Rettungsaktionen nötig.'
+      : state.uiState === 'warning'
+        ? 'Warnung: Werte fallen in riskante Bereiche.'
+        : '';
+  }
 
   dom.root.dataset.uiState = state.uiState;
-  dom.plant.dataset.stage = state.plantStage;
-  dom.plant.dataset.uiState = state.uiState;
+  if (dom.plant) {
+    dom.plant.dataset.stage = state.plantPhase;
+    dom.plant.dataset.uiState = state.uiState;
+    dom.plant.dataset.subStage = state.plantSubStage;
+  }
+
+  if (dom.phaseLabel) dom.phaseLabel.textContent = `${state.plantPhase} · ${state.plantSubStage}`;
 
   dom.largeRings[0]?.classList.toggle('k-critical-pulse', state.uiState === 'critical');
 
+  if (dom.adCount) dom.adCount.textContent = `${state.adViewsToday}/${DAILY_AD_LIMIT}`;
   if (dom.boostMeta) dom.boostMeta.textContent = `Ad supported · ${state.adViewsToday}/${DAILY_AD_LIMIT} today`;
-  if (dom.simTime) dom.simTime.textContent = formatTime(Date.now());
-  if (dom.nextEvent) dom.nextEvent.textContent = `in ${formatCountdown(10 - state.minutesSinceLastEventRoll)}`;
-  if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Ereignis aktiv' : 'Nächstes Lernereignis';
-
-  if (dom.dangerButton) {
-    dom.dangerButton.disabled = !isEmergencyAvailable(state);
-    dom.dangerButton.dataset.prominent = String(isEmergencyAvailable(state));
-  if (dom.adCount) dom.adCount.textContent = `${state.adViewsToday}/6`;
-  if (dom.boostMeta) dom.boostMeta.textContent = `Ad supported · ${state.adViewsToday}/6 today`;
-  if (dom.simTime) dom.simTime.textContent = formatTime(Date.now());
+  if (dom.simTime) dom.simTime.textContent = formatClock(Date.now());
   if (dom.nextEvent) dom.nextEvent.textContent = `in ${formatCountdown((state.nextEventAt || Date.now()) - Date.now())}`;
   if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Ereignis aktiv' : 'Nächstes Lernereignis';
 
-  dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);
-  if (state.analysisUnlocked) {
+  if (dom.dangerButton) {
+    const danger = isEmergencyAvailable(state);
+    dom.dangerButton.disabled = !danger;
+    dom.dangerButton.dataset.prominent = String(danger);
+  }
+
+  if (dom.boostButton) dom.boostButton.disabled = state.adViewsToday >= DAILY_AD_LIMIT;
+
+  if (dom.analysisScreen) dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);
+  if (dom.analysisData) {
     const a = getAnalysisSnapshot(state);
     dom.analysisData.innerHTML = `
       <div>Hydration: <strong>${a.hydration}%</strong></div>
       <div>Nutrition: <strong>${a.nutrition}%</strong></div>
       <div>Resilience: <strong>${a.resilience}%</strong></div>
-      <div>${a.recommendation}</div>
+      <div>Diagnosis: <strong>${a.diagnosis}</strong></div>
+      <div>${a.recommendations.join(' · ')}</div>
     `;
   }
 
-  dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);
-  const a = getAnalysisSnapshot(state);
-  dom.analysisData.innerHTML = `
-    <div>Hydration: <strong>${a.hydration}%</strong></div>
-    <div>Nutrition: <strong>${a.nutrition}%</strong></div>
-    <div>Resilience: <strong>${a.resilience}%</strong></div>
-    <div>Risk: <strong>${a.risk}%</strong></div>
-    <div>Diagnosis: <strong>${a.diagnosis}</strong></div>
-    <ul>${a.recommendations.map((r) => `<li>${r}</li>`).join('')}</ul>
-  `;
-
-  dom.historyList.innerHTML = state.history
-    .slice(0, 8)
-    .map((h) => `<li>${formatTime(h.t)} — ${h.label}</li>`)
-    .join('');
+  if (dom.historyList) {
+    dom.historyList.innerHTML = '';
+    state.history.slice(0, 8).forEach((entry) => {
+      const li = document.createElement('li');
+      li.textContent = `[${formatClock(entry.t)}] ${entry.label}`;
+      dom.historyList.appendChild(li);
+    });
+  }
 }
