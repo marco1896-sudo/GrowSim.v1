@@ -1,34 +1,59 @@
 :root {
-  --color-bg: #040814;
-  --color-bg-soft: #0a1324;
-  --color-surface: rgba(12, 20, 39, 0.78);
-  --color-surface-strong: rgba(10, 16, 30, 0.94);
-  --color-border: rgba(174, 205, 255, 0.16);
-  --color-text: #e8efff;
-  --color-text-muted: #a8b7db;
-  --color-primary: #98de7b;
-  --color-primary-soft: #6ecf84;
-  --color-danger: #f38997;
-  --color-warning: #f4d479;
-  --color-track: rgba(141, 164, 214, 0.2);
+  --font-ui: 'Inter', 'SF Pro Display', 'Segoe UI', Roboto, Arial, sans-serif;
 
-  --radius-sm: 12px;
+  --bg-layer-0: #040712;
+  --bg-layer-1: #0a1225;
+  --bg-layer-2: #121f3c;
+  --surface-0: rgba(20, 30, 55, 0.52);
+  --surface-1: rgba(16, 25, 45, 0.78);
+  --surface-2: rgba(14, 22, 40, 0.92);
+  --surface-highlight: rgba(180, 214, 255, 0.15);
+
+  --text-main: #edf4ff;
+  --text-muted: #9eb1d7;
+  --text-soft: #8195bb;
+
+  --accent-green: #99e47c;
+  --accent-mint: #67d7a5;
+  --accent-blue: #87c4ff;
+  --accent-pink: #ff7fa9;
+  --accent-warn: #f3d378;
+  --accent-danger: #f77488;
+
+  --ring-health: #98ff9e;
+  --ring-stress: #ff93a8;
+  --ring-water: #81d6ff;
+  --ring-nutrition: #ffd792;
+  --ring-growth: #82ffc2;
+  --ring-risk: #ffb18d;
+  --ring-track: rgba(112, 142, 195, 0.25);
+
+  --shadow-soft: 0 8px 18px rgba(0, 0, 0, 0.28);
+  --shadow-card: 0 14px 38px rgba(0, 0, 0, 0.42);
+  --shadow-glow: 0 0 28px rgba(128, 217, 147, 0.28);
+
+  --radius-xs: 10px;
+  --radius-sm: 14px;
   --radius-md: 18px;
-  --radius-lg: 26px;
-  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-xl: 30px;
+  --radius-pill: 999px;
 
-  --space-xs: 6px;
-  --space-sm: 10px;
-  --space-md: 14px;
-  --space-lg: 20px;
-  --space-xl: 28px;
-
-  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.38);
-  --shadow-glow: 0 0 40px rgba(133, 224, 109, 0.28);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 30px;
+  --space-8: 36px;
 
   --motion-fast: 160ms;
   --motion-med: 260ms;
-  --font-ui: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+  --motion-slow: 420ms;
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}

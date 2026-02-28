@@ -4,11 +4,9 @@ import { toggleScreen } from './screens.js';
 
 let controlsWired = false;
 
-function downloadJsonl(lines, fileName) {
+function downloadJsonl(lines = [], fileName) {
   const safeLines = Array.isArray(lines) ? lines : [];
   const blob = new Blob([`${safeLines.join('\n')}\n`], { type: 'application/x-ndjson' });
-function downloadJsonl(lines, fileName) {
-  const blob = new Blob([`${lines.join('\n')}\n`], { type: 'application/x-ndjson' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -19,95 +17,84 @@ function downloadJsonl(lines, fileName) {
   URL.revokeObjectURL(url);
 }
 
-function on(selector, handler) {
-  const node = document.querySelector(selector);
-  if (!node) return;
-  node.addEventListener('click', handler);
-}
-
-function onAll(selector, handler) {
-  document.querySelectorAll(selector).forEach((node) => node.addEventListener('click', handler));
-}
-
-function setSheet(dom, open, type = 'care') {
+function setSheet(dom, open, type) {
   const eventOpen = type === 'event' ? open : dom.eventWrap?.dataset.open === 'true';
   const careOpen = type === 'care' ? open : dom.careWrap?.dataset.open === 'true';
-  if (dom.eventWrap && type === 'event') {
+
+  if (type === 'event' && dom.eventWrap) {
     dom.eventWrap.dataset.open = String(open);
     dom.eventWrap.hidden = !open;
   }
-  if (dom.careWrap && type === 'care') {
+
+  if (type === 'care' && dom.careWrap) {
     dom.careWrap.dataset.open = String(open);
     dom.careWrap.hidden = !open;
   }
+
   if (dom.sheetBackdrop) dom.sheetBackdrop.hidden = !(eventOpen || careOpen);
+}
+
+function attachClick(selector, handler) {
+  document.querySelectorAll(selector).forEach((node) => node.addEventListener('click', handler));
 }
 
 export function wireControls(stateRef, dom, commit, services = {}) {
   if (controlsWired) return;
   controlsWired = true;
 
-  on('[data-action="water"]', () => {
-  if (dom.sheetBackdrop) {
-    dom.sheetBackdrop.hidden = !(eventOpen || careOpen);
-  }
-}
-
-export function wireControls(stateRef, dom, commit) {
-  document.querySelector('[data-action="water"]').addEventListener('click', () => {
+  attachClick('[data-action="water"]', () => {
     applyAction(stateRef.current, 'water');
     commit('Wasser gegeben');
   });
 
-  on('[data-action="feed"]', () => {
+  attachClick('[data-action="feed"]', () => {
     applyAction(stateRef.current, 'feed');
     commit('Nährstoffe gegeben');
   });
 
-  on('[data-action="prune"]', () => {
+  attachClick('[data-action="prune"]', () => {
     applyAction(stateRef.current, 'prune');
     commit('Pflanze geschnitten');
   });
 
-  onAll('[data-action="open-dashboard"]', () => {
-  document.querySelector('[data-action="open-dashboard"]').addEventListener('click', () => {
+  attachClick('[data-action="open-dashboard"]', () => {
     toggleScreen('dashboard');
     setSheet(dom, false, 'care');
   });
 
-  onAll('[data-action="open-analysis"]', () => {
-  document.querySelector('[data-action="open-analysis"]').addEventListener('click', () => {
+  attachClick('[data-action="open-analysis"]', () => {
     toggleScreen('analysis');
     setSheet(dom, false, 'care');
   });
 
   dom.openCareButton?.addEventListener('click', () => setSheet(dom, true, 'care'));
   dom.closeCareButton?.addEventListener('click', () => setSheet(dom, false, 'care'));
+  dom.closeEventButton?.addEventListener('click', () => setSheet(dom, false, 'event'));
+
 
   dom.sheetBackdrop?.addEventListener('click', () => {
     setSheet(dom, false, 'care');
-    if (dom.eventWrap?.dataset.open === 'false') dom.sheetBackdrop.hidden = true;
+    setSheet(dom, false, 'event');
   });
 
   dom.dangerButton?.addEventListener('click', () => {
-  dom.dangerButton.addEventListener('click', () => {
     const result = useAd(stateRef.current, 'rescue');
     if (!result.ok) {
       commit(result.reason);
       return;
     }
+
     if (dom.toast) {
       dom.toast.textContent = 'Emergency-Ad abgeschlossen.';
       dom.toast.dataset.show = 'true';
     }
     if (dom.scanline) dom.scanline.dataset.active = 'true';
-    dom.toast.textContent = 'Emergency-Ad abgeschlossen.';
-    dom.toast.dataset.show = 'true';
-    dom.scanline.dataset.active = 'true';
-    setTimeout(() => {
+
+    window.setTimeout(() => {
       if (dom.toast) dom.toast.dataset.show = 'false';
       if (dom.scanline) dom.scanline.dataset.active = 'false';
     }, 1800);
+
     commit('Emergency-Ad verwendet');
     setSheet(dom, false, 'care');
   });
@@ -122,7 +109,7 @@ export function wireControls(stateRef, dom, commit) {
     commit('Boost-Ad verwendet (+30 Min)');
   });
 
-  on('[data-action="analysis-ad"]', () => {
+  attachClick('[data-action="analysis-ad"]', () => {
     const result = useAd(stateRef.current, 'analysis');
     if (!result.ok) {
       commit(result.reason);
@@ -135,15 +122,6 @@ export function wireControls(stateRef, dom, commit) {
     downloadJsonl(stateRef.current.telemetry, `growsim-telemetry-${Date.now()}.jsonl`);
     commit('Telemetry exportiert');
   });
-    commit('Boost-Ad verwendet (+30 Min Demo)');
-  });
-
-  if (dom.exportButton) {
-    dom.exportButton.addEventListener('click', () => {
-      downloadJsonl(stateRef.current.telemetry, `growsim-telemetry-${Date.now()}.jsonl`);
-      commit('Telemetry exportiert');
-    });
-  }
 }
 
 export function syncSheetBackdrop(dom) {

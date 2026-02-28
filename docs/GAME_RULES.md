@@ -37,8 +37,13 @@ All stats are clamped to `0..100`:
 - In `flower` stage: positive growth gain multiplied by `0.5`
 
 ## Stage transitions
-- `seedling -> veg` when `growth >= 35`
-- `veg -> flower` when `growth >= 70`
+- Phase mapping remains threshold-based for compatibility:
+  - `seedling -> vegetative` at `growth >= 35`
+  - `vegetative -> flower` at `growth >= 70`
+- Added sub-stages for UI progression:
+  - Seedling: `sprout`, `cotyledon`, `early-seedling`
+  - Vegetative: `veg-early`, `veg-mid`, `veg-late`, `stretch`
+  - Flower: `flower-init`, `bud-set`, `bud-stack`, `ripen`
 
 ## Risk model (0..100)
 - `+40` if `water < 25`
