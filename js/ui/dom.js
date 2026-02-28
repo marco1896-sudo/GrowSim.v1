@@ -3,6 +3,7 @@ export const dom = {
   statusChip: document.querySelector('[data-ui="status-chip"]'),
   loadError: document.querySelector('[data-ui="load-error"]'),
   plant: document.querySelector('.c-plant'),
+  phaseLabel: document.querySelector('[data-ui="phase-label"]'),
   largeRings: [...document.querySelectorAll('[data-ring-size="large"]')],
   miniRings: [...document.querySelectorAll('[data-ring-size="mini"]')],
   adCount: document.querySelector('[data-ui="ad-count"]'),

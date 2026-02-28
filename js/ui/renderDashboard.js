@@ -49,12 +49,23 @@ export function renderDashboard(state, dom) {
     dom.statusChip.textContent = `Status: ${state.uiState}`;
   }
 
+  if (dom.alertBanner) {
+    dom.alertBanner.dataset.state = state.uiState;
+    dom.alertBanner.textContent = state.uiState === 'critical'
+      ? 'Kritischer Zustand erkannt — Rettungsaktionen nötig.'
+      : state.uiState === 'warning'
+        ? 'Warnung: Werte fallen in riskante Bereiche.'
+        : '';
+  }
+
   dom.root.dataset.uiState = state.uiState;
   if (dom.plant) {
     dom.plant.dataset.stage = state.plantPhase;
     dom.plant.dataset.uiState = state.uiState;
     dom.plant.dataset.subStage = state.plantSubStage;
   }
+
+  if (dom.phaseLabel) dom.phaseLabel.textContent = `${state.plantPhase} · ${state.plantSubStage}`;
 
   dom.largeRings[0]?.classList.toggle('k-critical-pulse', state.uiState === 'critical');
 
@@ -63,6 +74,7 @@ export function renderDashboard(state, dom) {
   if (dom.simTime) dom.simTime.textContent = formatClock(Date.now());
   if (dom.nextEvent) dom.nextEvent.textContent = `in ${formatCountdown((state.nextEventAt || Date.now()) - Date.now())}`;
   if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Wachstum pausiert durch Event' : 'Bei stabilem Zustand';
+  if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Ereignis aktiv' : 'Nächstes Lernereignis';
 
   if (dom.dangerButton) {
     const danger = isEmergencyAvailable(state);
@@ -73,6 +85,10 @@ export function renderDashboard(state, dom) {
   if (dom.boostButton) dom.boostButton.disabled = state.adViewsToday >= DAILY_AD_LIMIT;
 
   if (dom.diagnosisWrap) dom.diagnosisWrap.querySelector('.sheet')?.setAttribute('data-locked', String(!state.analysisUnlocked));
+
+  if (dom.boostButton) dom.boostButton.disabled = state.adViewsToday >= DAILY_AD_LIMIT;
+
+  if (dom.analysisScreen) dom.analysisScreen.dataset.locked = String(!state.analysisUnlocked);
   if (dom.analysisData) {
     const a = getAnalysisSnapshot(state);
     dom.analysisData.innerHTML = `

@@ -37,6 +37,24 @@ function setSheet(dom, open, type) {
 
 function attachClick(selector, handler) {
   document.querySelectorAll(selector).forEach((node) => node.addEventListener('click', handler));
+  const eventOpen = type === 'event' ? open : dom.eventWrap?.dataset.open === 'true';
+  const careOpen = type === 'care' ? open : dom.careWrap?.dataset.open === 'true';
+
+  if (type === 'event' && dom.eventWrap) {
+    dom.eventWrap.dataset.open = String(open);
+    dom.eventWrap.hidden = !open;
+  }
+
+  if (type === 'care' && dom.careWrap) {
+    dom.careWrap.dataset.open = String(open);
+    dom.careWrap.hidden = !open;
+  }
+
+  if (dom.sheetBackdrop) dom.sheetBackdrop.hidden = !(eventOpen || careOpen);
+}
+
+function attachClick(selector, handler) {
+  document.querySelectorAll(selector).forEach((node) => node.addEventListener('click', handler));
 }
 
 export function wireControls(stateRef, dom, commit, services = {}) {
@@ -60,6 +78,12 @@ export function wireControls(stateRef, dom, commit, services = {}) {
 
   attachClick('[data-action="open-dashboard"]', () => {
     setSheet(dom, true, 'dashboard');
+    toggleScreen('dashboard');
+    setSheet(dom, false, 'care');
+  });
+
+  attachClick('[data-action="open-analysis"]', () => {
+    toggleScreen('analysis');
     setSheet(dom, false, 'care');
   });
 
@@ -70,6 +94,7 @@ export function wireControls(stateRef, dom, commit, services = {}) {
   dom.closeEventButton?.addEventListener('click', () => setSheet(dom, false, 'event'));
   dom.closeDashboardButton?.addEventListener('click', () => setSheet(dom, false, 'dashboard'));
   dom.closeDiagnosisButton?.addEventListener('click', () => setSheet(dom, false, 'diagnosis'));
+
 
   dom.sheetBackdrop?.addEventListener('click', () => {
     setSheet(dom, false, 'care');
