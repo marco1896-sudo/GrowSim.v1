@@ -2,6 +2,7 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>GrowSim.v1</title>
     <link rel="stylesheet" href="./css/tokens.css" />
@@ -64,6 +65,13 @@
 
         <section class="info-bar c-card">
           <div class="info-cell">
+            <div class="info-label">Nächstes Event</div>
+            <strong data-ui="next-event">in 00:00</strong>
+          </div>
+          <div class="info-cell">
+            <div class="info-label">Growth impulse</div>
+            <strong>+3% Wachstum</strong>
+            <small data-ui="next-event-meta">Bei stabilem Zustand</small>
             <div class="info-label">Aktuelle Phase</div>
             <strong data-ui="phase-label">Seedling</strong>
           </div>
@@ -88,9 +96,41 @@
           <button class="c-btn c-btn--boost" data-action="boost-ad">Boost <small data-ui="boost-meta">Ad supported · 0/6 today</small></button>
         </nav>
 
-        <div class="c-alert-banner" data-ui="alert-banner" data-state="normal"></div>
-      </section>
+        <nav class="main-actions">
+          <button class="c-btn c-btn--primary" data-action="open-care">Care</button>
+          <button class="c-btn c-btn--secondary" data-action="open-analysis">Analyze</button>
+          <button class="c-btn c-btn--boost" data-action="boost-ad">+30 Min Boost <small data-ui="boost-meta">Ad supported · 0/6 today</small></button>
+        </nav>
 
+        <button type="button" class="locked-card c-card" data-action="open-diagnosis">
+          <h3>Advanced diagnosis available</h3>
+          <p>Unlock with Pro or watch an Ad.</p>
+        </button>
+      </section>
+    </main>
+
+    <div class="sheet-backdrop" data-ui="sheet-backdrop" hidden></div>
+
+    <div class="sheet-wrap" data-ui="care-wrap" data-open="false" hidden>
+      <article class="sheet">
+        <header class="sheet__header"><h3>Care</h3></header>
+        <div class="sheet__content care-actions">
+          <button class="c-btn" data-action="water">Water</button>
+          <button class="c-btn" data-action="feed">Feed</button>
+          <button class="c-btn" data-action="prune">Prune</button>
+          <button class="c-btn" data-action="open-dashboard">Dashboard</button>
+          <button class="c-btn c-btn--danger" data-action="emergency-ad" data-prominent="false">Emergency Ad</button>
+          <button class="c-btn c-btn--secondary" data-action="close-care">Close</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="sheet-wrap" data-ui="dashboard-wrap" data-open="false" hidden>
+      <article class="sheet sheet--dashboard">
+        <header class="sheet__header">
+          <h3>Dashboard / Log</h3>
+          <button class="sheet__close" type="button" data-action="close-dashboard">Close</button>
+        </header>
       <section class="screen c-card" data-screen="analysis" data-locked="true" hidden>
         <h2><svg width="16" height="16"><use href="#i-analysis"/></svg> Diagnose</h2>
         <div class="analysis-data"></div>
@@ -105,6 +145,22 @@
           <ul data-ui="history"></ul>
         </article>
         <div class="analysis-actions">
+          <button class="c-btn" data-action="export-telemetry">Export JSONL</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="sheet-wrap" data-ui="diagnosis-wrap" data-open="false" hidden>
+      <article class="sheet sheet--diagnosis" data-locked="true">
+        <header class="sheet__header">
+          <h3><svg width="16" height="16"><use href="#i-analysis"/></svg> Diagnosis</h3>
+          <button class="sheet__close" type="button" data-action="close-diagnosis">Close</button>
+        </header>
+        <div class="analysis-data"></div>
+        <div class="analysis-lock c-card">
+          <h3>🔒 Premium diagnosis locked</h3>
+          <p>Watch an ad to unlock advanced details and recommendations.</p>
+          <button class="c-btn c-btn--secondary" data-action="analysis-ad">Unlock via Ad</button>
           <button class="c-btn c-btn--secondary" data-action="open-dashboard">Zurück</button>
           <button class="c-btn" data-action="export-telemetry">Export JSONL</button>
         </div>

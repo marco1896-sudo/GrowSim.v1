@@ -1,6 +1,5 @@
 import { applyAction } from '../systems/plantSystem.js';
 import { useAd } from '../systems/adSystem.js';
-import { toggleScreen } from './screens.js';
 
 let controlsWired = false;
 
@@ -18,6 +17,26 @@ function downloadJsonl(lines = [], fileName) {
 }
 
 function setSheet(dom, open, type) {
+  const wraps = {
+    care: dom.careWrap,
+    event: dom.eventWrap,
+    dashboard: dom.dashboardWrap,
+    diagnosis: dom.diagnosisWrap
+  };
+
+  Object.entries(wraps).forEach(([key, node]) => {
+    if (!node) return;
+    const isOpen = key === type ? open : node.dataset.open === 'true';
+    node.dataset.open = String(isOpen);
+    node.hidden = !isOpen;
+  });
+
+  const anyOpen = Object.values(wraps).some((node) => node?.dataset.open === 'true');
+  if (dom.sheetBackdrop) dom.sheetBackdrop.hidden = !anyOpen;
+}
+
+function attachClick(selector, handler) {
+  document.querySelectorAll(selector).forEach((node) => node.addEventListener('click', handler));
   const eventOpen = type === 'event' ? open : dom.eventWrap?.dataset.open === 'true';
   const careOpen = type === 'care' ? open : dom.careWrap?.dataset.open === 'true';
 
@@ -58,6 +77,7 @@ export function wireControls(stateRef, dom, commit, services = {}) {
   });
 
   attachClick('[data-action="open-dashboard"]', () => {
+    setSheet(dom, true, 'dashboard');
     toggleScreen('dashboard');
     setSheet(dom, false, 'care');
   });
@@ -68,13 +88,19 @@ export function wireControls(stateRef, dom, commit, services = {}) {
   });
 
   dom.openCareButton?.addEventListener('click', () => setSheet(dom, true, 'care'));
+  dom.openAnalysisButton?.addEventListener('click', () => setSheet(dom, true, 'diagnosis'));
+  dom.openDiagnosisButton?.addEventListener('click', () => setSheet(dom, true, 'diagnosis'));
   dom.closeCareButton?.addEventListener('click', () => setSheet(dom, false, 'care'));
   dom.closeEventButton?.addEventListener('click', () => setSheet(dom, false, 'event'));
+  dom.closeDashboardButton?.addEventListener('click', () => setSheet(dom, false, 'dashboard'));
+  dom.closeDiagnosisButton?.addEventListener('click', () => setSheet(dom, false, 'diagnosis'));
 
 
   dom.sheetBackdrop?.addEventListener('click', () => {
     setSheet(dom, false, 'care');
     setSheet(dom, false, 'event');
+    setSheet(dom, false, 'dashboard');
+    setSheet(dom, false, 'diagnosis');
   });
 
   dom.dangerButton?.addEventListener('click', () => {
@@ -125,7 +151,7 @@ export function wireControls(stateRef, dom, commit, services = {}) {
 }
 
 export function syncSheetBackdrop(dom) {
-  const eventOpen = dom.eventWrap?.dataset.open === 'true';
-  const careOpen = dom.careWrap?.dataset.open === 'true';
-  if (dom.sheetBackdrop) dom.sheetBackdrop.hidden = !(eventOpen || careOpen);
+  const anyOpen = [dom.eventWrap, dom.careWrap, dom.dashboardWrap, dom.diagnosisWrap]
+    .some((node) => node?.dataset.open === 'true');
+  if (dom.sheetBackdrop) dom.sheetBackdrop.hidden = !anyOpen;
 }

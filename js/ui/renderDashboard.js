@@ -73,6 +73,7 @@ export function renderDashboard(state, dom) {
   if (dom.boostMeta) dom.boostMeta.textContent = `Ad supported · ${state.adViewsToday}/${DAILY_AD_LIMIT} today`;
   if (dom.simTime) dom.simTime.textContent = formatClock(Date.now());
   if (dom.nextEvent) dom.nextEvent.textContent = `in ${formatCountdown((state.nextEventAt || Date.now()) - Date.now())}`;
+  if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Wachstum pausiert durch Event' : 'Bei stabilem Zustand';
   if (dom.nextEventMeta) dom.nextEventMeta.textContent = state.currentEvent ? 'Ereignis aktiv' : 'Nächstes Lernereignis';
 
   if (dom.dangerButton) {
@@ -80,6 +81,10 @@ export function renderDashboard(state, dom) {
     dom.dangerButton.disabled = !danger;
     dom.dangerButton.dataset.prominent = String(danger);
   }
+
+  if (dom.boostButton) dom.boostButton.disabled = state.adViewsToday >= DAILY_AD_LIMIT;
+
+  if (dom.diagnosisWrap) dom.diagnosisWrap.querySelector('.sheet')?.setAttribute('data-locked', String(!state.analysisUnlocked));
 
   if (dom.boostButton) dom.boostButton.disabled = state.adViewsToday >= DAILY_AD_LIMIT;
 
